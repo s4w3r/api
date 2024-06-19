@@ -20,13 +20,13 @@ export default class infoController{
         }
      }
 
-     /* static async store(req,res){
+     static async store(req,res){
         let connection;
         try{
+            const {title, descricion, img, leftColor, rightColor} =req.body
             connection =  await mysql.createConnection(db)
-            const [result] = await connection.execute("INSERT INTO bobby (title, descricion, img, leftColor, rightColor) VALUES (?,?,?,?,?)",(title, descricion,img,leftColor,rightColor))
+            const [result] = await connection.execute("INSERT INTO bobby (title, descricion, img, leftColor, rightColor) VALUES (?,?,?,?,?)",[title, descricion,img,leftColor,rightColor])
             console.log(result)
-            res.json(result)
         }
         catch(error){
              res.status(500).json({'error':error.message})   
@@ -36,5 +36,24 @@ export default class infoController{
                 await connection.end()
             }
         }
-     } */
+     } 
+
+    static async details(req,res){
+        let connection;
+        try{
+            const idB = req.params.id
+            connection = await mysql.createConnection(db)
+            const [result] = await connection.execute("SELECT * FROM bobby WHERE idB = ?",[idB])
+            console.log(result)
+            res.status(200).json(result)
+        }
+        catch(error){
+            res.status(500).json({'error':error.message}) 
+        }
+        finally{
+            if(connection){
+                await connection.end()
+            }
+        }
+     }
 }

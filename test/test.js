@@ -2,7 +2,7 @@ import * as chai from 'chai';
 const expect = chai.expect;
 import chaiHttp from 'chai-http';
 import app from '../index.js'
-/* import faker from 'faker' */
+import faker from 'Faker'
 
 const c= chai.use(chaiHttp)
 
@@ -15,5 +15,41 @@ describe('GET /api/info',()=>{
             expect(res.body).not.have.lengthOf(0)
             done()
         })
+    })
+})
+
+describe('POST /api/info',()=>{
+    it('should POST a new component',(done)=>{
+        let prubea={
+            title:faker.Lorem.words(1)[0],
+            descricion:faker.Lorem.paragraph(1)[0],
+            img:faker.Image.sports(),
+            leftColor:faker.Internet.color(),
+            rightColor:faker.Internet.color()
+        }
+        c.request(app)
+            .post('/api/info')
+            .send(prubea)
+            .end((err,res)=>{
+                expect(err).to.be.null
+                expect(res).to.have.status(200)
+                expect(res.body).be.a('object')
+                expect(res.body).to.have.property('prueba')
+                
+            })
+            done()
+        })
+    })
+
+describe('GET /api/info/:id',()=>{
+    it('should GET all info por id',(done)=>{
+        c.request(app).get('/api/info/1').end((err,res)=>{
+            expect(err).to.be.null
+            expect(res).to.have.status(200)
+            expect(res.body[0]).to.have.property('idB')
+            expect(res.body[0].id).to.equal()
+            
+        })
+        done()
     })
 })
